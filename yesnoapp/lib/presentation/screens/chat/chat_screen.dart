@@ -28,7 +28,7 @@ class ChatScreen extends StatelessWidget {
 }
 
 class _ChatView extends StatelessWidget {
-
+  
   @override
   Widget build(BuildContext context) {
     final chatProvider = context.watch<ChatProvider>();
@@ -43,8 +43,8 @@ class _ChatView extends StatelessWidget {
               itemCount: chatProvider.messages.length,
               itemBuilder: (context, index) {
                 final message = chatProvider.messages[index];
-                if (message.fromWho == FromWho.mine) return MyMessageBubble(text: message.text);
-                return HerMessageBubble(text: message.text);
+                return (message.fromWho == FromWho.hers) ?
+                 HerMessageBubble(message: message) : MyMessageBubble(message: message);
               },
             )),
             MessageFieldBox(onValue: (value) {

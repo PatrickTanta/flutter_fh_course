@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:yesnoapp/domain/entities/message.dart';
 
 class HerMessageBubble extends StatelessWidget {
-  const HerMessageBubble({super.key, required this.text});
+  final Message message;
 
-  final String text;
+  const HerMessageBubble({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
-
     final colors = Theme.of(context).colorScheme;
 
     return Column(
@@ -15,46 +15,49 @@ class HerMessageBubble extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: colors.tertiary
-          ),
+              color: colors.secondary, borderRadius: BorderRadius.circular(20)),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Text(text, style: TextStyle(color: colors.onPrimary)),
+            child: Text(
+              message.text,
+              style: const TextStyle(color: Colors.white),
+            ),
           ),
         ),
-
-        SizedBox(height: 5,),
-
-        // toto image
-        _ImageBubble(),
-
-        SizedBox(height: 5,),
+        const SizedBox(height: 5),
+        _ImageBubble( message.imageUrl! ),
+        const SizedBox(height: 10),
       ],
     );
   }
 }
 
 class _ImageBubble extends StatelessWidget {
-  const _ImageBubble({super.key});
+  final String imageUrl;
+
+  const _ImageBubble( this.imageUrl );
 
   @override
   Widget build(BuildContext context) {
-
     final size = MediaQuery.of(context).size;
+
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20), 
-      child: Image.network("https://yesno.wtf/assets/yes/1-af11222d8d4af90bdab8fc447c8cfebf.gif", fit: BoxFit.cover, height: 150, width: size.width * 0.7,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return const Center(child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: CircularProgressIndicator(strokeWidth: 3),
+        borderRadius: BorderRadius.circular(20),
+        child: Image.network(
+          imageUrl,
+          width: size.width * 0.7,
+          height: 150,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+
+            return Container(
+              width: size.width * 0.7,
+              height: 150,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: const Text('Mi amor está enviando una imagen'),
+            );
+          },
         ));
-      },
-      errorBuilder: (context, error, stackTrace) {
-        return const Center(child: Icon(Icons.error, color: Color.fromARGB(255, 255, 212, 209),));
-      },)
-    );
   }
 }
